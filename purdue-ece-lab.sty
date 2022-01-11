@@ -15,7 +15,7 @@
 \RequirePackage{tocloft}
 % circuit diagrams
 \RequirePackage[siunitx,american,RPvoltages]{circuitikz}
-% plotss
+% plots
 \RequirePackage{pgfplots}
 % option parsing
 \RequirePackage{pgfopts}
@@ -23,7 +23,7 @@
 \RequirePackage{fancyhdr}
 % access to the floating point unit, for \error etc
 \RequirePackage{xfp}
-% for getting the name of the section, needed for \label inside circuit and plot environments
+% for getting the name of the section, needed for \label inside circuit and environments
 \RequirePackage{nameref}
 % hyperlinks/references/etc
 \RequirePackage{hyperref}
@@ -49,7 +49,7 @@
 \fancyhf{}
 \ifx\lab@partner\undefined\rhead{\lab@author}\else\setlength{\headheight}{24.0pt}\addtolength{\topmargin}{-12.0pt}\rhead{\begin{tabular}{rr}\lab@author\\\lab@partner\end{tabular}}\fi
 \lhead{Lab \pgfkeysvalueof{/lab/labnum}: \pgfkeysvalueof{/lab/title}}
-\rfoot{\thepage}
+\cfoot{\thepage}
 \pagestyle{fancy}
 
 % title setup

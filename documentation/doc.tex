@@ -14,7 +14,7 @@ Set the title of the report, the lab number, and the course name respectively. \
 
 \DescribeOption{author}
 \DescribeOption{partner}
-Sets the author and lab partner of the paper. The \texttt{partner} key is optional, and can be omitted to reference a single author. The author and partner are listed on the title page, as well as in the header of each page.\\
+Sets the author and lab partner of the paper. The \texttt{partner} key is optional, when omitted all references to the partner will be hidden. The author and partner are listed on the title page, as well as in the header of each page.\\
 
 \section{Macros}
 \begin{function}{\task}
@@ -49,32 +49,36 @@ Sets the author and lab partner of the paper. The \texttt{partner} key is option
   \begin{syntax}
     \cs{inputcode}\oarg{listings opts}\marg{filename}
   \end{syntax}
-  Calls \cs{lstinputlisting}\oarg{listings opts}\marg{filename}. Code language set using the \texttt{codelanguage} option. Sets the title of the created \texttt{listings} environment to \marg{filename}.
+  Calls \cs{lstinputlisting}\oarg{listings opts}\marg{filename}. Recommended to set the code language using the listings options. Default code language is Python. Sets the title of the created \texttt{listings} environment to \marg{filename}.
 \end{function}
 
 \begin{function}{\listofplots}
   % \begin{syntax}
   %   \cs{listofplots}
   % \end{syntax}
+  Creates a list of plots using the \verb|tocloft| package.
 \end{function}
 
 \begin{function}{\listofcircuits}
   % \begin{syntax}
   %   \cs{listofcircuits}
   % \end{syntax}
+  Creates a list of circuits using the \verb|tocloft| package.
 \end{function}
 
 
 \section{Environments}
 \begin{function}{plot}
   \begin{syntax}
-    \cs{begin}\marg{plot}\oarg{pgfplot axis opts}\marg{name}
+    \cs{begin}\marg{plot}
   \end{syntax}
+  Wrapper for a centered \verb|tikzpicture|. If unstarred, increments \cs{theplots} and adds an entry to the \cs{listofplots}. Support for \cs{caption}\oarg{short list entry}\marg{caption text} and \cs{label}\marg{label name}. Sane naming when used with \cs{autoref}\marg{target}. Note that, when using \verb|pgfplots|, the \cs{caption} and \cs{label} commands must be outside the \verb|axis| environment.
 \end{function}
 
 \begin{function}{circuit}
   \begin{syntax}
-    \cs{begin}\marg{circuit}\marg{name}
+    \cs{begin}\marg{circuit}
   \end{syntax}
+  Wrapper for a centered \verb|circuitikz|. If unstarred, increments \cs{thecircuits} and adds an entry to the \cs{listofcircuits}. Support for \cs{caption}\oarg{short list entry}\marg{caption text} and \cs{label}\marg{label name}. Sane naming when used with \cs{autoref}\marg{target}.
 \end{function}
 \end{document}
