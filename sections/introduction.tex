@@ -1,0 +1,23 @@
+\documentclass[../example.tex]{subfiles}
+
+\begin{document}
+\task[A quick introduction]{1}
+
+% \subtask[Why \LaTeX?]{1}
+% \LaTeX\ is a ``What You See Is Not What You Get'' editor. If you're looking at the source code, this is quite obvious.
+
+% So why would you use an editor like this? There are many reasons, but perhaps the most important of them is that it allows for changes that affect the entire document, with only a few commands. Because \LaTeX\ knows what a subtask is, for example, it would be simple to make all text in all subtasks bold. Other benefits include the many available packages, such as pgfplots for making plots and circuitikz for drawing circuits. Both of these packages are introduced later in this document.
+
+\subtask[Basic editing]{1}
+% Most writing in \LaTeX\ is exactly like writing in any other text editor or word processor -- just type the text you want, where you want it. Compile the document with your preferred method to view the new pdf.
+
+% Whitespace in \LaTeX, while writing text, is generally either compressed into a single space or a new paragraph. If there are two or more newlines, a new paragraph is inserted. Otherwise, it is simply a space. If you need more space, there are a few options. \verb|\<space>| will insert a single space, regardless of preceding or following spaces. \verb|\hspace{1ex}| will insert the specified amount of horizontal space. Similarly, \verb|\vspace{1em}| will insert the given amount of vertical space after the next linebreak. To insert a linebreak without starting a new paragraph, you can use \verb|\\| or \verb|\linebreak|.
+% % for those curious -- \verb is short for verbatim
+
+Overleaf has written a much better guide than I would be able to -- use \url{https://www.overleaf.com/learn/latex/Tutorials} to learn how to use \LaTeX.
+
+\subtask[Document structure]{2}
+% A \LaTeX\ document is typically structured like a tree -- parts branch into chapters branch into sections, etc. In most documents that are not books, you will probably only use \verb|\section| and \verb|\subsection|.
+
+This package provides task and subtask commands, which are analogous to (and implemented with) the section and subsection commands. For a typical paper, automatic section numbering is preferred. However, when following the lab manual, I preferred using the same section numbers. These commands make it easier to do that.
+\end{document}

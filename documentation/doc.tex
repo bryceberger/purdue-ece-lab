@@ -1,0 +1,80 @@
+\documentclass{l3doc}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+
+\section{Keys}
+
+\DescribeOption{title}
+\DescribeOption{labnum}
+\DescribeOption{course}
+Set the title of the report, the lab number, and the course name respectively. \texttt{course} is only used on the title page. \texttt{labnum} is used as a prefix for section numbering, as well as in the header of each page along with \texttt{title}.\\
+
+\DescribeOption{author}
+\DescribeOption{partner}
+Sets the author and lab partner of the paper. The \texttt{partner} key is optional, and can be omitted to reference a single author. The author and partner are listed on the title page, as well as in the header of each page.\\
+
+\section{Macros}
+\begin{function}{\task}
+  \begin{syntax}
+    \cs{task}\oarg{name}\marg{number}
+  \end{syntax}
+  Inserts a new page, sets \cs{thesection} to \marg{number}, and calls \cs{section}\marg{name}.
+\end{function}
+
+\begin{function}{\subtask}
+  \begin{syntax}
+    \cs{subtask}\oarg{name}\marg{number}
+  \end{syntax}
+  Sets \cs{thesubsection} to \marg{number} and calls \cs{subsection}\marg{name}.
+\end{function}
+
+\begin{function}{\objective}
+  % \begin{syntax}
+  %   \cs{objective}
+  % \end{syntax}
+  Calls \verb|\paragraph{Objective}|.
+\end{function}
+
+\begin{function}{\conclusion}
+  % \begin{syntax}
+  %   \cs{conclusion}
+  % \end{syntax}
+  Calls \verb|\paragraph{Conclusion}|.
+\end{function}
+
+\begin{function}{\inputcode}
+  \begin{syntax}
+    \cs{inputcode}\oarg{listings opts}\marg{filename}
+  \end{syntax}
+  Calls \cs{lstinputlisting}\oarg{listings opts}\marg{filename}. Code language set using the \texttt{codelanguage} option. Sets the title of the created \texttt{listings} environment to \marg{filename}.
+\end{function}
+
+\begin{function}{\listofplots}
+  % \begin{syntax}
+  %   \cs{listofplots}
+  % \end{syntax}
+\end{function}
+
+\begin{function}{\listofcircuits}
+  % \begin{syntax}
+  %   \cs{listofcircuits}
+  % \end{syntax}
+\end{function}
+
+
+\section{Environments}
+\begin{function}{plot}
+  \begin{syntax}
+    \cs{begin}\marg{plot}\oarg{pgfplot axis opts}\marg{name}
+  \end{syntax}
+\end{function}
+
+\begin{function}{circuit}
+  \begin{syntax}
+    \cs{begin}\marg{circuit}\marg{name}
+  \end{syntax}
+\end{function}
+\end{document}

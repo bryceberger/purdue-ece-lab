@@ -1,0 +1,199 @@
+% Made largely over the course of the 2021 fall semester as students in ECE 2k7 by Bryce Berger and Robert Sammelson
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{purdue-ece-lab}[Unofficial Latex Package for ECE labs]
+
+% caption editing
+\RequirePackage[labelfont=bf]{caption}
+% code highlighting
+\RequirePackage{listings}
+% better tables
+% \RequirePackage{longtable,booktabs,multirow}
+% SI units
+\RequirePackage{siunitx}
+% table of contents management
+\RequirePackage{tocloft}
+% circuit diagrams
+\RequirePackage[siunitx,american,RPvoltages]{circuitikz}
+% plotss
+\RequirePackage{pgfplots}
+% option parsing
+\RequirePackage{pgfopts}
+% header
+\RequirePackage{fancyhdr}
+% access to the floating point unit, for \error etc
+\RequirePackage{xfp}
+% for getting the name of the section, needed for \label inside circuit and plot environments
+\RequirePackage{nameref}
+% hyperlinks/references/etc
+\RequirePackage{hyperref}
+
+\pgfqkeys{/lab}
+{
+.is family
+,title/.initial = lab title not set
+,labnum/.initial = 0
+,author/.initial = author not set
+,author/.store in = \lab@author
+,partner/.store in = \lab@partner
+,course/.initial = course not set
+}
+
+\ProcessPgfOptions{/lab}
+
+% author setup
+% conditional to check if partner was given
+\ifx\lab@partner\undefined\author{\small Author\vspace{-.5ex}\\\large\lab@author}\else\author{\small Author\vspace{-.5ex}\\\large\lab@author\and\small Lab Partner\vspace{-.5ex}\\\large\lab@partner}\fi
+
+% header and footer setup
+\fancyhf{}
+\ifx\lab@partner\undefined\rhead{\lab@author}\else\setlength{\headheight}{24.0pt}\addtolength{\topmargin}{-12.0pt}\rhead{\begin{tabular}{rr}\lab@author\\\lab@partner\end{tabular}}\fi
+\lhead{Lab \pgfkeysvalueof{/lab/labnum}: \pgfkeysvalueof{/lab/title}}
+\rfoot{\thepage}
+\pagestyle{fancy}
+
+% title setup
+\title{\sc \pgfkeysvalueof{/lab/course} \vspace{2ex}\\\normalsize Lab \pgfkeysvalueof{/lab/labnum}\\\Large \pgfkeysvalueof{/lab/title}}
+
+% SIunitx, pgf, and tikz setup
+\sisetup{retain-explicit-plus, table-format=-3.3, output-complex-root=\ensuremath{j}, complex-root-position=before-number}
+\usetikzlibrary{arrows, intersections}
+\pgfplotsset{compat=newest}
+\ctikzset{multipoles/dipchip/width=2.5, multipoles/dipchip/pin spacing=1}
+
+% table of contents
+\hypersetup{colorlinks,linktoc=all,citecolor=black,filecolor=black,linkcolor=black,urlcolor=black}
+\cftsetindents{section}{0em}{3.8em}
+\cftsetindents{subsection}{3.8em}{3.8em}
+
+% list of plots
+\newcommand{\listplotsname}{List of Plots}
+\newlistof{plots}{plt}{\listplotsname}
+\renewcommand{\cftplttitlefont}{\bfseries\Large}
+\providecommand*{\plotsautorefname}{Plot}
+
+% list of circuits
+\newcommand{\listcircuitsname}{List of Circuits}
+\newlistof{circuits}{cir}{\listcircuitsname}
+\renewcommand{\cftcirtitlefont}{\bfseries\Large}
+\providecommand*{\circuitsautorefname}{Circuit}
+
+% task and subtask environments
+\renewcommand{\thesection}{\pgfkeysvalueof{/lab/labnum}.\arabic{section}}
+\newcommand{\task}[2][]{\newpage\setcounter{section}{#2}\addtocounter{section}{-1}\section{#1}}
+\newcommand{\subtask}[2][]{\setcounter{subsection}{#2}\addtocounter{subsection}{-1}\subsection{#1}}
+\newcommand{\objective}{\paragraph{Objective}}
+\newcommand{\conclusion}{\paragraph{Conclusion}}
+
+% plot environment
+\NewDocumentEnvironment{plot}{s +b}
+{
+  \IfBooleanT{#1}
+    % if star provided, use previous number as reference
+    % have to do -1 because \refstepcounter either way
+    {\addtocounter{plots}{-1}}
+  \refstepcounter{plots}
+
+  \begin{center}
+  \begin{tikzpicture}
+  
+  % define label command
+  % long because hyperref
+  \def\label##1{\@bsphack\protected@write\@auxout{}{\string\newlabel{##1}{{\@currentlabel}{\thepage}{\@currentlabelname}{plots.\theplots}{}}}\@esphack}
+
+  % define caption command
+  % \def\caption##1{\global\def\tempcaption{##1}}
+  \renewcommand{\caption}[2][]{
+    \global\def\tempcaption{##2}
+    \global\def\tempcaptionshort{##1}}
+
+  #2
+
+  \end{tikzpicture}
+  \ifx\tempcaption\undefined
+    \global\def\tempcaption{}
+  \else
+    \if
+      \relax\tempcaption\relax\@makecaption{Plot \theplots}{}
+    \else
+      \@makecaption{Plot \theplots}{\tempcaption}
+    \fi
+  \fi
+  \end{center}
+
+  \IfBooleanF{#1}
+    % test for optional argument of caption
+    {\if\relax\tempcaptionshort\relax
+      \addcontentsline{plt}{figure}{\protect\numberline{\theplots}\tempcaption}
+    \else
+      \addcontentsline{plt}{figure}{\protect\numberline{\theplots}\tempcaptionshort}
+    \fi}
+}
+{\global\let\tempcaption\undefined\global\let\tempcaptionshort\undefined}
+
+% circuit environment
+\NewDocumentEnvironment{circuit}{s +b}
+{
+  \IfBooleanT{#1}
+    % if star provided, use previous number as reference
+    % have to do -1 because \refstepcounter either way
+    {\addtocounter{circuits}{-1}}
+  \refstepcounter{circuits}
+  \begin{center}
+  \begin{circuitikz}
+    
+  % define label command
+  % long because hyperref
+  \def\label##1{\@bsphack\protected@write\@auxout{}{\string\newlabel{##1}{{\@currentlabel}{\thepage}{\@currentlabelname}{circuits.\thecircuits}{}}}\@esphack}
+
+  % define caption command
+  % \def\caption##1{\global\def\tempcaption{##1}}
+  \renewcommand{\caption}[2][]{
+    \global\def\tempcaption{##2}
+    \global\def\tempcaptionshort{##1}}
+
+  #2
+
+  % ending code starts here
+  \end{circuitikz}
+  % make caption, compatible with captions package
+  \ifx\tempcaption\undefined
+    \global\def\tempcaption{}
+  \else
+    \if
+      \relax\tempcaption\relax\@makecaption{Circuit \thecircuits}{}
+    \else
+      \@makecaption{Circuit \thecircuits}{\tempcaption}
+    \fi
+  \fi
+  \end{center}
+  % start test for toc
+  \IfBooleanF{#1}
+    % test for optional argument of caption
+    {\if\relax\tempcaptionshort\relax
+      \addcontentsline{cir}{figure}{\protect\numberline{\thecircuits}\tempcaption}
+    \else
+      \addcontentsline{cir}{figure}{\protect\numberline{\thecircuits}\tempcaptionshort}
+    \fi}
+}
+{\global\let\tempcaption\undefined\global\let\tempcaptionshort\undefined}
+  
+% colors for code
+\definecolor{numbers}{rgb}{0.50, 0.50, 0.50}
+\definecolor{comment}{rgb}{0.00, 0.60, 0.00}
+\definecolor{string}{rgb} {0.58, 0.00, 0.82}
+\definecolor{keyword}{rgb}{0.00, 0.00, 1.00}
+% \definecolor{identifier}{rgb}{0.00, 0.00, 0.00} % black
+
+% \inputcode[optional lst arguments]{filename.ext}
+\lstset{frame=tb, language=python,aboveskip=3mm, belowskip=3mm, showstringspaces=false, columns=flexible, basicstyle={\small\ttfamily}, numbers=left, numberstyle=\footnotesize\color{numbers}, keywordstyle=\color{keyword}, commentstyle=\color{comment}, stringstyle=\color{string}, breaklines=true, breakatwhitespace=true, tabsize=4}
+\makeatletter
+\newcommand\inputcode[2][]{%
+\filename@parse{\detokenize{#2}}
+\lstinputlisting[title = \texttt{\filename@base.\filename@ext}, #1]{#2}}
+\makeatother
+
+% \error{actual}{expected}
+\newcommand{\error}[2]{\fpeval{round(abs((#1 - #2)/#2 * 100),2)}}
+% \efficiency{useful}{total}
+\newcommand{\efficiency}[2]{\fpeval{round(abs(#1/(#1 + #2) * 100),2)}}

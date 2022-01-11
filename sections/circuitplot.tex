@@ -1,0 +1,51 @@
+\documentclass[../example.tex]{subfiles}
+
+\begin{document}
+\task[Some more features]{2}
+\objective The objective command provides an easy way to label objectives. There is also an equivalent \verb|\conclusion| command.
+
+\subtask[Code blocks]{1}
+\verb|\inputcode[listings options]{filename.ext}|
+% note -- if using the subfiles package, file path is specified from the parent file
+\inputcode{example.py}
+
+The \verb|\inputcode| command provides an easy way to input format code files. This is implemented with the listings package (\url{https://ctan.org/pkg/listings}), and can be tweaked using its key-value system. The default language is set to Python.
+
+\subtask[Circuit diagrams]{2}
+\url{https://ctan.org/pkg/circuitikz}
+\begin{circuit}
+  \draw
+  (0, 0) coordinate (A)
+  (0, 3) coordinate (B)
+  (3, 3) coordinate (C)
+  (3, 0) coordinate (D)
+  
+  (A) to [sV, v=$v_S$] (B)
+  (B) -- (C)
+  (C) to [L, l=\SI{2j}{\ohm}] (D)
+  (D) -- (A)
+  ;
+  \caption{Example Circuit}
+  \label{circuit:example}
+\end{circuit}
+
+The \verb|circuit| environment is a wrapper for the \verb|circuitikz| environment from the corresponding package. The \verb|circuit| environment sets the diagram to be centered, as well as adding support for \verb|\caption[]{}|, \verb|\label{}|, and \verb|\autoref{}|. There is also a \verb|\listofcircuits|. A starred environment is available that will not be added to the list. The links produced from autoref appear as \autoref{circuit:example}
+
+\subtask[Plots]{3}
+\url{https://ctan.org/pkg/pgfplots}
+\begin{plot}
+  \begin{axis}[width=.8\textwidth, domain=-2*pi:2*pi, restrict y to domain=-2:2]
+    \addplot[black, no markers, samples=100, dashed, name path global = line] {-x};
+    \addplot[black, no markers, samples=500, name path global = sine] {cos(180*x/pi)};
+    \fill [name intersections={of=sine and line},every node/.style={black,opacity=1}] node [pin={above left:\pgfplotspointgetcoordinates{(intersection-1)}$(\pgfmathprintnumber[fixed]{\pgfkeysvalueof{/data point/x}}, \pgfmathprintnumber[fixed]{\pgfkeysvalueof{/data point/y}})$}] at (intersection-1) {} circle (2pt) node (intersection-1) {};
+    \legend{Linear, Cosine}
+  \end{axis}
+  \caption{}
+  \label{plot:example}
+\end{plot}
+
+The \verb|plot| environment is a wrapper for the \verb|tikzpicture| environment, intended to be used with the \verb|axis| environment to produce plots. The environment does not directly wrap the \verb|axis| environment, to allow more advanced features such as two axes on the same graph. Similar to the \verb|circuit| wrapper above, this adds support for \verb|\caption[]{}|, \verb|\label{}|, and \verb|\autoref{}|, as well as having its own \verb|\listofplots| with a corresponding starred environment. Note that the caption and label commands must be outside of the axis environment, but inside the plot environment. The autoref links appear as \autoref{plot:example}.
+
+\subtask{4}
+Other useful features include an error calculator accessed with \verb|\error{actual}{expected}| and an effeciency calculator accessed with \verb|\efficiency{useful}{total}|. Both of these commands print a number from 0 to 100 with two decimal places.
+\end{document}
