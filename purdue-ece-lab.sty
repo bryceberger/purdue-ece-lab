@@ -88,6 +88,7 @@
 % plot environment
 \NewDocumentEnvironment{plot}{s +b}
 {
+  \global\let\tempcaptionshort\relax
   \IfBooleanT{#1}
     % if star provided, use previous number as reference
     % have to do -1 because \refstepcounter either way
@@ -134,6 +135,7 @@
 % circuit environment
 \NewDocumentEnvironment{circuit}{s +b}
 {
+  \global\let\tempcaptionshort\relax
   \IfBooleanT{#1}
     % if star provided, use previous number as reference
     % have to do -1 because \refstepcounter either way
